@@ -19,32 +19,26 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.get("/candidate", async(req, res) => {
-
-    const candidates = await controller.findAll();
-    res.send(candidates)
+    controller.getAllCandidates(req, res);
 });
 
 app.get("/candidate/:id", async(req, res) => {
-    const candidateId = await controller.findOne(req, res);
-    res.send(candidateId);
+    controller.getCandidateById(req, res);
 });
 
 app.post("/candidate", async(req, res) => {
-    const result = await controller.create(req, res)
-    res.send(result)
+    controller.createCandidate(req, res);
 });
 
-app.post("/score/candidate/:id", async(req, res) => {
-    const result = await controller.candidateScore(req, res)
-    res.send(result)
+app.post("/candidate/score/:id", async(req, res) => {
+    controller.addCandidateScore(req, res)
+
 });
 
-app.get("/score/candidate/", async(req, res) => {
-    const result = await controller.findByScore(req, res);
-    res.send(result);
+app.get("/test/details", async(req, res) => {
+    controller.findTestDetails(req, res);
+
 });
-
-
 
 const PORT = process.env.PORT || 5151;
 

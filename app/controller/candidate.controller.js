@@ -1,77 +1,58 @@
 const db = require("../model");
 const sequelize = require("sequelize");
+const candidateService = require("../service/candidate.service");
 
 const candidates = db.candidates;
 const candidateScore = db.candidateScore;
 
-exports.create = async(req, res) => {
+exports.createCandidate = async(req, res) => {
+    const payload = req.body;
     const candidate = {
-        name: req.body.name,
-        emailId: req.body.emailId,
+        name: payload.name,
+        emailId: payload.emailId,
     };
-    const info = await candidates.create(candidate);
-    return info;
-
+    const result = await candidateService.createCandidate(candidate);
+    res.send(result);
 };
 
-exports.findAll = async(req, res) => {
-    const getAll = await candidates.findAll();
-    return getAll;
+exports.getAllCandidates = async(req, res) => {
+    const result = await candidateService.getAllCandidates();
+    res.send(result);
 };
 
-exports.findOne = async(req, res) => {
+exports.getCandidateById = async(req, res) => {
     const candidateId = req.params.id;
-    const info = await candidates.findByPk(candidateId)
-    return info;
+    const result = await candidateService.getCandidateById(candidateId)
+    res.send(result);
 };
 
-exports.findByScore = async(req, res) => {
-    // const info = await candidateScore.sequelize.query('SELECT candidateId, (SUM(first_round)+SUM(second_round)+SUM(third_round)) as total  FROM test_scores group by candidateId order by total   desc ;');
-    const highestScoreCandidate = await candidateScore.findAll({
-        include: [{
-            model: candidates,
-            required: true,
-            as: 'candidate',
-            // attributes: ['id', 'name']
-        }],
-        attributes: [
-            [sequelize.literal(
-                'COALESCE(first_round, 0) + COALESCE(second_round, 0) + COALESCE(third_round, 0)'
-            ), 'total'],
-        ],
-        order: [
+exports.findTestDetails = async(req, res) => {
+    const result = await candidateService.findTestDetails();
+    res.send(result);
+}
 
-            [sequelize.literal(
-                'COALESCE(first_round, 0) + COALESCE(second_round, 0) + COALESCE(third_round, 0)'
-            ), 'DESC']
-
-        ],
-        group: ['candidateId'],
-        limit: 1
-    });
-
-    const avgScoresPerRound = await candidateScore.findAll({
-        attributes: [
-            [sequelize.fn('avg', sequelize.col('first_round')), 'firstRound'],
-            [sequelize.fn('avg', sequelize.col('second_round')), 'secondRound'],
-            [sequelize.fn('avg', sequelize.col('third_round')), 'thirdRound'],
-        ],
-    });
-
-    return { highestScoreCandidate: highestScoreCandidate[0], avgScoresPerRound };
-};
-
-exports.candidateScore = async(req, res) => {
+exports.addCandidateScore = async(req, res) => {
+    const payload = req.body
     const score = {
-        firstRound: req.body.firstRound,
-        secondRound: req.body.secondRound,
-        thirdRound: req.body.thirdRound,
+        firstRound: payload.firstRound,
+        secondRound: payload.secondRound,
+        thirdRound: payload.thirdRound,
         candidateId: req.params.id
     }
-    const info = await candidateScore.create(score);
-    return info;
+    const data = await candidateService.addCandidateScore(score);
+    res.send(data);
 
 };
+
+
+
+
+
+
+
+
+
+
 
 
 // SELECT candidateId, (SUM(first_round)+SUM(second_round)+SUM(third_round)) as total  FROM test_scores group by candidateId order by total   desc ;
