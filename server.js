@@ -18,25 +18,25 @@ app.use(express.json());
 
 app.use(express.urlencoded({ extended: true }));
 
-app.get("/candidate", async(req, res) => {
-    controller.getAllCandidates(req, res);
+app.get("/candidate", async(req, res, next) => {
+    controller.getAllCandidates(req, res, next);
 });
 
-app.get("/candidate/:id", async(req, res) => {
-    controller.getCandidateById(req, res);
+app.get("/candidate/:id", async(req, res, next) => {
+    controller.getCandidateById(req, res, next);
 });
 
-app.post("/candidate", async(req, res) => {
-    controller.createCandidate(req, res);
+app.post("/candidate", async(req, res, next) => {
+    controller.createCandidate(req, res, next);
 });
 
-app.post("/candidate/score/:id", async(req, res) => {
-    controller.addCandidateScore(req, res)
+app.post("/candidate/score/:id", async(req, res, next) => {
+    controller.addCandidateScore(req, res, next)
 
 });
 
-app.get("/test/details", async(req, res) => {
-    controller.findTestDetails(req, res);
+app.get("/test/details", async(req, res, next) => {
+    controller.findTestDetails(req, res, next);
 
 });
 
