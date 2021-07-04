@@ -18,34 +18,47 @@ exports.createCandidate = async(req, res, next) => {
 };
 
 exports.getAllCandidates = async(req, res, next) => {
-    const result = await candidateService.getAllCandidates();
-    res.send(result);
+    try {
+        const result = await candidateService.getAllCandidates();
+        res.send(result);
+    } catch (error) {
+        next(error);
+    }
 };
 
 exports.getCandidateById = async(req, res, next) => {
-    await schemaValidator.validateRequest(schema.getCandidateByIdRequestSchema, req.params);
-
-    const candidateId = req.params.id;
-    const result = await candidateService.getCandidateById(candidateId)
-    res.send(result);
+    try {
+        const candidateId = req.params.id;
+        const result = await candidateService.getCandidateById(candidateId)
+        res.send(result);
+    } catch (error) {
+        next(error);
+    }
 };
 
 exports.findTestDetails = async(req, res, next) => {
-    const result = await candidateService.findTestDetails();
-    res.send(result);
+    try {
+        const result = await candidateService.findTestDetails();
+        res.send(result);
+    } catch (error) {
+        next(error);
+    }
 }
 
 exports.addCandidateScore = async(req, res, next) => {
-    const payload = req.body
-    const score = {
-        firstRound: payload.firstRound,
-        secondRound: payload.secondRound,
-        thirdRound: payload.thirdRound,
-        candidateId: req.params.id
+    try {
+        const payload = req.body
+        const score = {
+            firstRound: payload.firstRound,
+            secondRound: payload.secondRound,
+            thirdRound: payload.thirdRound,
+            candidateId: req.params.id
+        }
+        const data = await candidateService.addCandidateScore(score);
+        res.send(data);
+    } catch (error) {
+        next(error);
     }
-    const data = await candidateService.addCandidateScore(score);
-    res.send(data);
-
 };
 
 
