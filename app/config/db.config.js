@@ -1,7 +1,7 @@
 module.exports = {
-    host: "db-study.cvm7crkxeqnl.us-east-2.rds.amazonaws.com",
+    host: "localhost",
     user: "admin",
-    password: "Admin#123",
+    password: "123456",
     db: "task_interview",
     dialect: "mysql",
     pool: {
